@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t garzas/react-test -f ./client/Dockerfile.dev ./client
+
+
+script:
+  - docker run garzas/react-test npm test -- --coverage
+
+
+after_success:
+  - docker build -t garzas/multi-client ./client 
+  - docker build -t garzas/multi-nginx ./nginx
+  - docker build -t garzas/multi-server ./server
+  - docker build -t garzas/multi-worker ./worker
+  # Log in to the docker CLI
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  
+  # take those images and push them to docker hub
+  - docker push garzas/multi-client
+  - docker push garzas/multi-nginx
+  - docker push garzas/multi-server
+  - docker push garzas/multi-worker
