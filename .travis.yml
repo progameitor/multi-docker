@@ -17,10 +17,12 @@ after_success:
   - docker build -t garzas/multi-worker ./worker
   # Log in to the docker CLI
 
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login docker -u "$DOCKER_ID" --password-stdin
   
   # take those images and push them to docker hub
   - docker push garzas/multi-client
+  #modificado linea de abajo para ver si puedo solucionar los problemas
+  - echo "$DOCKER_PASSWORD" | docker login docker -u "$DOCKER_ID" --password-stdin
   - docker push garzas/multi-nginx
   - docker push garzas/multi-server
   - docker push garzas/multi-worker
